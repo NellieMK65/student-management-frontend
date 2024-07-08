@@ -1,6 +1,26 @@
-import { NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 export const DashboardLayout = ({ children }) => {
+	const [session, setSession] = useState();
+
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	useEffect(() => {
+		const session = JSON.parse(localStorage.getItem('session'));
+		if (session) {
+			setSession(session);
+		} else {
+			navigate('/login');
+		}
+	}, [navigate, location]);
+
+	const handleLogout = () => {
+		localStorage.clear('session');
+		navigate('/login');
+	};
+
 	return (
 		<div className="container-fluid">
 			<div className="row flex-nowrap">
@@ -39,21 +59,22 @@ export const DashboardLayout = ({ children }) => {
 						</ul>
 						<hr />
 						<div className="dropdown pb-4">
-							<a
-								href="#"
+							<span
+								style={{ cursor: 'grab' }}
+								onClick={() => handleLogout()}
 								className="d-flex align-items-center text-white text-decoration-none"
 							>
 								<img
-									src="Admin"
+									src={`https://ui-avatars.com/api/?name=${session?.user?.name}`}
 									alt="admin"
 									width="30"
 									height="30"
 									className="rounded-circle"
 								/>
 								<span className="d-none d-sm-inline mx-1">
-									Admin
+									{session?.user?.name}
 								</span>
-							</a>
+							</span>
 						</div>
 					</div>
 				</div>

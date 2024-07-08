@@ -3,18 +3,32 @@ import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { SERVER_URL } from '../utils';
 import { DeleteStudentModal } from '../components/DeleteStudentModal';
+import toast from 'react-hot-toast';
 
 export const Students = () => {
 	const [students, setStudents] = useState([]);
 	const [isFetching, setIsFetching] = useState(false);
 
 	const handleFetchStudents = () => {
-		setIsFetching(true);
-		fetch(`${SERVER_URL}/students`)
+		const session = JSON.parse(localStorage.getItem('session'));
+
+		fetch(`${SERVER_URL}/students`, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${session.accessToken}`,
+			},
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				setIsFetching(false);
-				setStudents(data);
+
+				if (data instanceof Array) {
+					setStudents(data);
+				} else {
+					const message = data?.msg ?? data?.message;
+
+					toast.error(message);
+				}
 			})
 			.catch((err) => {
 				setIsFetching(false);

@@ -8,6 +8,7 @@ import { Toaster } from 'react-hot-toast';
 import { Home } from './pages/Home.jsx';
 import { Students } from './pages/Students.jsx';
 import { DashboardLayout } from './components/Layout.jsx';
+import { Login } from './pages/Login.jsx';
 
 const router = createBrowserRouter([
 	{
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
 				<Home />
 			</DashboardLayout>
 		),
+	},
+	{
+		path: '/login',
+		element: <Login />,
 	},
 	{
 		path: 'students',
